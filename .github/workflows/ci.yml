@@ -1,5 +1,8 @@
 name: Check Linting & Build
 
+on:
+  push:
+    
 jobs:
   lint:
     name: Lint & Build App
