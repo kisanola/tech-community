@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "tech-com-api-staging",
+      "script": "dist/index.js",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  ]
+}
