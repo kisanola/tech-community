@@ -9,8 +9,7 @@ export default class EducationController {
    * @author Olivier
    * @param {Object} req
    * @param {Object} res
-   * @param {*} next
-   * @returns {Object} Returns the response
+   * @returns {Promise<any>} Returns the response
    */
   static async createEducation(req, res) {
     const { currentUser, body } = req;
@@ -33,8 +32,7 @@ export default class EducationController {
    * @author Olivier
    * @param {Object} req
    * @param {Object} res
-   * @param {*} next
-   * @returns {Object} Returns the response
+   * @returns {Promise<any>} Returns the response
    */
   static async updateEducation(req, res) {
     const { currentUser, body, personEducation } = req;
@@ -62,11 +60,10 @@ export default class EducationController {
    * @author Olivier
    * @param {Object} req
    * @param {Object} res
-   * @param {*} next
-   * @returns {Object} Returns the response
+   * @returns {Promise<any>} Returns the response
    */
   static async deleteEducation(req, res) {
-    const { currentUser, body, personEducation } = req;
+    const { currentUser, personEducation } = req;
 
     if (!currentUser._id.equals(personEducation.user)) {
       return res.status(statusCodes.UNAUTHORIZED).json({

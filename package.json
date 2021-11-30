@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "build": "babel src --out-dir dist --ignore 'src/__tests__,src/__mocks__'",
     "lint": "node_modules/.bin/eslint .",
-    "lint:fix": "prettier-eslint --write '**/*.js'",
+    "lint:fix": "npm run lint -- --fix",
     "seed": "babel-node src/seeders/index.js",
     "seed:test": "NODE_ENV=test babel-node src/seeders/index.js",
     "drop": "babel-node src/seeders/dropCollections.js",
