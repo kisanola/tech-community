@@ -34,7 +34,7 @@
     "algoliasearch": "^3.33.0",
     "babel-preset-airbnb": "^3.2.1",
     "babel-watch": "^7.0.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "celebrate": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
