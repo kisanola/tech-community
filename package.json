@@ -17,7 +17,8 @@
     "drop:test": "NODE_ENV=test npm run drop",
     "pm2:deploy:staging": "npm run build && pm2 start app.staging.json",
     "pm2:start:staging": "pm2 start app.staging.json",
-    "pm2:stop:staging": "pm2 stop app.staging.json"
+    "pm2:stop:staging": "pm2 stop app.staging.json",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -75,7 +76,13 @@
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^7.0.0",
     "jest": "^24.8.0",
+    "lint-staged": "^12.1.2",
     "supertest": "^4.0.2"
+  },
+  "lint-staged": {
+    "*.ts": "eslint",
+    "*.js": "eslint"
   }
 }
