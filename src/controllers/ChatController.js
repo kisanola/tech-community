@@ -32,7 +32,7 @@ export default class ChatController {
             receiver: id,
         });
 
-        notifier(currentUser.username, chat, req.app.io)
+        notifier({ event: currentUser.username, payload: chat, io: req.app.io })
 
         return res.status(statusCodes.OK).json({
             status: statusCodes.OK,
