@@ -4,11 +4,11 @@
     "jest": true
   },
   "plugins": ["prettier"],
+  "parserOptions": {
+    "allowImportExportEverywhere": true,
+    "sourceType": "module"
+  },
   "rules": {
-    "parserOptions": {
-      "allowImportExportEverywhere": true,
-      "sourceType": "module"
-    },
     "prefer-promise-reject-errors": 0,
     "no-throw-literal": 0,
     "no-underscore-dangle": 0,
@@ -33,6 +33,7 @@
         "requireReturnDescription": true
       }
     ],
-    "prettier/prettier": 0
+    "prettier/prettier": 0,
+    "import/no-import-module-exports": 0
   }
 }
