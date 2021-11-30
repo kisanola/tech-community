@@ -1,4 +1,4 @@
-name: Backend
+name: Deploy Backend
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Backend
+      - name: Deploy
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{secrets.DO_IP_ADDRESS}} # IP address of the server you wish to ssh into
