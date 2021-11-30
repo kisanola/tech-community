@@ -10,14 +10,15 @@
     "start": "node dist/index.js",
     "build": "babel src --out-dir dist --ignore 'src/__tests__,src/__mocks__'",
     "lint": "node_modules/.bin/eslint .",
-    "lint:fix": "prettier-eslint --write '**/*.js'",
+    "lint:fix": "npm run lint -- --fix",
     "seed": "babel-node src/seeders/index.js",
     "seed:test": "NODE_ENV=test babel-node src/seeders/index.js",
     "drop": "babel-node src/seeders/dropCollections.js",
     "drop:test": "NODE_ENV=test npm run drop",
     "pm2:deploy:staging": "npm run build && pm2 start app.staging.json",
     "pm2:start:staging": "pm2 start app.staging.json",
-    "pm2:stop:staging": "pm2 stop app.staging.json"
+    "pm2:stop:staging": "pm2 stop app.staging.json",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -75,7 +76,13 @@
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^7.0.0",
     "jest": "^24.8.0",
+    "lint-staged": "^12.1.2",
     "supertest": "^4.0.2"
+  },
+  "lint-staged": {
+    "*.ts": "eslint",
+    "*.js": "eslint"
   }
 }

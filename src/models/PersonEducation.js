@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import moment from 'moment';
 
 const personEducationSchema = new Schema({
   from: {
