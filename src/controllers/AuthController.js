@@ -258,7 +258,8 @@ export const walletSignup = async (req, res) => {
 
   const response = (status, user) => res.status(status).json({
     nonce: user.nonce,
-    publicAddress: user.publicAddress
+    publicAddress: user.publicAddress,
+    updatedAt: user.updatedAt
   });
   const nonce = Math.floor(Math.random() * 1000000)
   const user = await User
@@ -290,7 +291,7 @@ export const walletLogin = async (req, res) => {
       message: `User with public address ${publicAddress} not found!`
     })
   }
-  const msg = `I am signin my one-time nonce ${user.nonce}`
+  const msg = `Signing one-time nonce ${user.nonce} ${user.updatedAt} ${user.publicAddress}`
   const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf-8'))
   const address = recoverPersonalSignature({
     data: msgBufferHex,
