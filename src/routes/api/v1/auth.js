@@ -2,7 +2,7 @@ import express from 'express';
 import { celebrate } from 'celebrate';
 import dotenv from 'dotenv';
 import passport from '../../../config/passport';
-import AuthController from '../../../controllers/AuthController';
+import AuthController, { walletSignup, walletLogin } from '../../../controllers/AuthController';
 import { authValidator } from './validators';
 import { asyncHandler, checkUser, verifyToken } from '../../../middlewares';
 
@@ -55,6 +55,20 @@ router
   );
 
 router
+  .route('/signup/wallet')
+  .post(
+    celebrate({ body: authValidator.publicAddress }),
+    asyncHandler(walletSignup),
+  );
+
+router
+  .route('/login/wallet')
+  .post(
+    celebrate({ body: authValidator.walletLogin }),
+    asyncHandler(walletLogin),
+  );
+
+  router
   .route('/signup')
   .post(
     checkUser,

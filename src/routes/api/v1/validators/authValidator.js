@@ -36,6 +36,18 @@ const email = Joi.object().keys({
     .required(),
 });
 
+const publicAddress = Joi.object().keys({
+  publicAddress: Joi.string()
+    .required(),
+});
+
+const walletLogin = Joi.object().keys({
+  publicAddress: Joi.string()
+    .required(),
+  signature: Joi.string()
+    .required(),
+});
+
 const password = Joi.object().keys({
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)
@@ -47,4 +59,6 @@ export default {
   login,
   email,
   password,
+  publicAddress,
+  walletLogin
 };
