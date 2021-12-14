@@ -57,7 +57,7 @@ router
 router
   .route('/signup/wallet')
   .post(
-    celebrate({ body: authValidator.publicAddress }),
+    celebrate({ body: authValidator.walletAddress }),
     asyncHandler(walletSignup),
   );
 

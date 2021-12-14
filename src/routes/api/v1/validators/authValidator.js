@@ -36,7 +36,7 @@ const email = Joi.object().keys({
     .required(),
 });
 
-const publicAddress = Joi.object().keys({
+const walletAddress = Joi.object().keys({
   publicAddress: Joi.string()
     .required(),
 });
@@ -59,6 +59,6 @@ export default {
   login,
   email,
   password,
-  publicAddress,
+  walletAddress,
   walletLogin
 };

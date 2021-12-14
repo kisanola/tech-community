@@ -302,7 +302,7 @@ export const walletLogin = async (req, res) => {
   const token = await encrypt.generateToken(user._id)
 
   const getUser = (userId) =>
-      Organization.findOne({ user: userId }).populate('user').exec();
+      Person.findOne({ user: userId }).populate('user').exec();
 
   const usr = await getUser(user.id);
 
