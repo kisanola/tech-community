@@ -37,14 +37,8 @@ class AuthController {
    * @memberof User
    */
   static async findOrCreate(res, providerUser) {
-    const {
-      id,
-      email,
-      picture,
-      displayName,
-      name,
-      fallbackUrl,
-    } = AuthController.fromProvider(providerUser);
+    const { id, email, picture, displayName, name, fallbackUrl } =
+      AuthController.fromProvider(providerUser);
 
     const getUser = (userId) => Person.findById(userId).populate('user').exec();
 
@@ -304,8 +298,8 @@ export const walletLogin = async (req, res) => {
       error: 'Signature verification failed!'
     })
   }
-  
-  const token = encrypt.generateToken(user._id)
+
+  const token = await encrypt.generateToken(user._id)
 
   const getUser = (userId) =>
       Organization.findOne({ user: userId }).populate('user').exec();
