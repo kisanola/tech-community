@@ -1,27 +1,27 @@
-import { Job } from '../models';
+import { Post} from '../models';
 import * as statusCodes from '../constants/statusCodes';
 import { notExist } from '../constants/responseMessages';
 
-const checkJob = async (req, res, next) => {
-  const { jobSlug: slug } = req.params;
+const checkPostAndJob = async (req, res, next) => {
+  const { postSlug: slug } = req.params;
 
-  const foundJob = await Job.findOne({
+  const foundPost = await Post.findOne({
     slug,
     status: { $ne: 'deleted' },
   })
     .select('-__v')
     .populate('author', '-userType -__v -password');
 
-  if (!foundJob) {
+  if (!foundPost) {
     return res.status(statusCodes.NOT_FOUND).json({
       status: statusCodes.NOT_FOUND,
-      message: notExist('Job'),
+      message: notExist('Post'),
     });
   }
 
-  req.job = foundJob;
+  req.post = foundPost;
 
   next();
 };
 
-export default checkJob;
+export default checkPostAndJob;

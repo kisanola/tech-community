@@ -13,6 +13,10 @@ const PostSchema = new Schema({
     type: String,
     default: 'general',
   },
+  userType: {
+    type: String,
+    default: 'general',
+  },
   image: {
     type: String,
   },
@@ -45,6 +49,20 @@ const PostSchema = new Schema({
   updatedAt: {
     type: Date,
     default: new Date(),
+  },
+  likes: [{ type: Schema.Types.ObjectId, ref: 'Like', }],
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'JobCategory',
+  },
+  country: {
+    type: String,
+  },
+  province: {
+    type: String,
+  },
+  city: {
+    type: String,
   },
 });
 

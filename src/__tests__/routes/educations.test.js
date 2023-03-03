@@ -13,7 +13,7 @@ let user;
 describe('educations', () => {
   beforeAll(async () => {
     user = await User.findOne({ username: 'admin' });
-    tokenData = await Token.findOne({ _userId: user._id }).sort({
+    tokenData = await Token.findOne({ user: user._id }).sort({
       createdAt: -1,
     });
     token = `Bearer ${tokenData.token}`;

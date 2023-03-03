@@ -8,7 +8,7 @@ describe('Reset password', () => {
   let user;
   beforeAll(async () => {
     user = await User.findOne({ username: 'admin' });
-    const tokenData = await Token.findOne({ _userId: user._id }).sort({
+    const tokenData = await Token.findOne({ user: user._id }).sort({
       createdAt: -1,
     });
     token = `Bearer ${tokenData.token}`;

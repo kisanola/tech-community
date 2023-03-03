@@ -12,7 +12,7 @@ const checkAuth = async (req, res, next) => {
   if (!token) {
     return res
       .status(401)
-      .json({ status: 401, message: 'Unauthorized access' });
+      .json({ status: 401, message: 'Unauthorized access', authorization });
   }
   // Checks if the token exist in the database
   const foundToken = await Token.findOne({
@@ -29,7 +29,7 @@ const checkAuth = async (req, res, next) => {
     if (err || !decoded) {
       return res
         .status(401)
-        .json({ status: 401, message: 'Unauthorized access' });
+        .json({ status: 401, message: 'Unauthorized access', err });
     }
     user = await User.findOne({
       _id: decoded._id,
@@ -41,6 +41,7 @@ const checkAuth = async (req, res, next) => {
         .json({ status: 401, message: 'Unauthorized access for user' });
     }
     req.currentUser = user;
+    req.token = foundToken;
     next();
   });
 };

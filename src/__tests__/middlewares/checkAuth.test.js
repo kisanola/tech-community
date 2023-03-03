@@ -12,7 +12,7 @@ let token;
 let tokenBearer;
 jest.setTimeout(30000);
 
-describe.only('checkAuth.js', () => {
+describe('checkAuth.js', () => {
   beforeAll(async () => {
     token = await Token.create({ token: 'token' });
     tokenBearer = `Bearer ${token.token}`;

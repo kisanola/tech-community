@@ -1,7 +1,7 @@
 import { User, Person } from '../models';
 import { statusCodes, responseMessages } from '../constants';
 import { PAGE_LIMIT } from '../constants/shared';
-
+import { notifEvents } from '../middlewares/registerEvents';
 /**
  * @description Profile Controller class
  */
@@ -30,6 +30,15 @@ export default class ProfileController {
     if (!currentUser.info) {
       await currentUser.updateOne({ info: person.upserted[0]._id });
     }
+
+    notifEvents.emit('update-index', {
+      title: `${person.firstName} ${person.middleName} ${person.lastName}`
+        .replace('  ', ' ')
+        .trim(),
+      objectID: currentUser.username,
+      resource: 'user',
+      keywords: `${person.firstName} ${person.lastName}`,
+    });
 
     return res.status(statusCodes.OK).json({
       status: statusCodes.OK,

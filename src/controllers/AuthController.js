@@ -10,6 +10,8 @@ import {
   FORBIDDEN,
   UNAUTHORIZED,
 } from '../constants/statusCodes';
+import Token from '../models/Token';
+import { notifEvents } from '../middlewares/registerEvents';
 
 dotenv.config();
 
@@ -25,7 +27,7 @@ class AuthController {
    * else the same user is returned
    *
    * @author Grace Lungu
-   * @static 
+   * @static
    * @param {*} res
    * @param {*} providerUser
    * @returns {object} user
@@ -73,6 +75,14 @@ class AuthController {
     user = await getUser(person.id);
 
     const token = await encrypt.generateToken(person.user);
+
+    notifEvents.emit('create-index', {
+      title: user.username,
+      objectID: user.username,
+      resource: 'user',
+      image: picture,
+      keywords: `${name.givenName} ${name.familyName}`,
+    });
 
     return res.status(status).json({
       user,
@@ -124,16 +134,17 @@ class AuthController {
    */
   static async signup(req, res) {
     const hashedPassword = encrypt.hashPassword(req.body.password);
-    const { companyName, username, email } = req.body;
+    const { companyName, username, email, notificationToken } = req.body;
 
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
+      userType: 'organization'
     });
     const organization = await Organization.create({
       name: companyName,
-      user: user.id,
+      user: user._id,
     });
 
     const getUser = id =>
@@ -144,7 +155,17 @@ class AuthController {
     const result = await getUser(organization.id);
 
     const token = await encrypt.generateToken(user._id);
+
+    await Token.create({ user: user._id, token, notificationToken });
+
     sendMail(email, companyName, token);
+
+    notifEvents.emit('create-index', {
+      title: companyName,
+      objectID: username,
+      resource: 'user',
+      keywords: `${companyName} ${username}`,
+    });
 
     return res.status(CREATED).json({
       status: CREATED,
@@ -163,7 +184,7 @@ class AuthController {
    * @memberof Auth
    */
   static async login(req, res) {
-    const { username, password } = req.body;
+    const { username, password, notificationToken } = req.body;
 
     const user = await User.findOne().or([{ username }, { email: username }]);
 
@@ -174,7 +195,9 @@ class AuthController {
       });
     }
 
-    const token = await encrypt.generateToken(user.id);
+    const token = await encrypt.generateToken(user._id);
+
+    await Token.create({ user: user._id, token, notificationToken });
 
     if (!user.verified) {
       sendMail(user.email, username, token);
@@ -209,8 +232,9 @@ class AuthController {
    */
   static async verification(req, res) {
     const { _id } = req.jwtPayload;
+
     const user = await User.findOne({
-      _id
+      _id,
     });
 
     if (user.verified) {

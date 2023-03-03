@@ -21,6 +21,14 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  followerCount: {
+    type: Number,
+    default: 0,
+  },
+  followedCount: {
+    type: Number,
+    default: 0,
+  },
   country: {
     type: String,
   },
@@ -51,7 +59,7 @@ const UserSchema = new Schema({
   },
   userType: {
     type: String,
-    default: 'user',
+    default: 'person',
   },
   verified: {
     type: Boolean,
@@ -69,6 +77,7 @@ const UserSchema = new Schema({
     type: Date,
     default: new Date(),
   },
+  recommendations: [{ type: Schema.Types.ObjectId, ref: 'Recommendation' }],
 });
 
 UserSchema.plugin(mongoosePaginate);

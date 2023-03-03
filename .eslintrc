@@ -9,6 +9,7 @@
       "allowImportExportEverywhere": true,
       "sourceType": "module"
     },
+    "prefer-promise-reject-errors": 0,
     "no-throw-literal": 0,
     "no-underscore-dangle": 0,
     "one-var": 0,

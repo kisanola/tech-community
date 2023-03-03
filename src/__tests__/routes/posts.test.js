@@ -3,8 +3,9 @@ import app from '../../app';
 import { postData } from '../../__mocks__/dummyData';
 import { urlPrefix } from '../../__mocks__/variables';
 import { User, Token, Post } from '../../models';
-import * as statusCodes from '../../constants/statusCodes';
+import { statusCodes, responseMessages } from '../../constants';
 import slugString from '../../helpers/slugString';
+
 
 let tokenData;
 let token;
@@ -14,7 +15,7 @@ let user;
 describe('posts', () => {
   beforeAll(async () => {
     user = await User.findOne({ username: 'admin' });
-    tokenData = await Token.findOne({ _userId: user._id }).sort({
+    tokenData = await Token.findOne({ user: user._id }).sort({
       createdAt: -1,
     });
     token = `Bearer ${tokenData.token}`;
@@ -81,6 +82,58 @@ describe('posts', () => {
         .send(postData);
       expect(res.status).toBe(statusCodes.OK);
       expect(res.body.post).toHaveProperty('title');
+    });
+  });
+
+  describe('like a post', () => {
+    test('should return `Unauthorized access`', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/posts/postSlug/like`)
+        .send(postData);
+      expect(res.status).toBe(statusCodes.UNAUTHORIZED);
+      expect(res.body.message).toBe('Unauthorized access');
+    });
+
+    test('should like a post', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/posts/${postSlug}/like`)
+        .set('Authorization', token)
+      expect(res.status).toBe(statusCodes.OK);
+      expect(res.body.message).toBe('Post successfully liked');
+    });
+
+    test('should return a conflict', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/posts/${postSlug}/like`)
+        .set('Authorization', token)
+      expect(res.status).toBe(statusCodes.CONFLICT);
+      expect(res.body.message).toBe(responseMessages.alreadyLike('post'));
+    });
+  });
+
+  describe('unlike a post', () => {
+    test('should return `Unauthorized access`', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/posts/postSlug/like`)
+        .send(postData);
+      expect(res.status).toBe(statusCodes.UNAUTHORIZED);
+      expect(res.body.message).toBe('Unauthorized access');
+    });
+
+    test('should like a post', async () => {
+      const res = await request(app)
+        .delete(`${urlPrefix}/posts/${postSlug}/like`)
+        .set('Authorization', token)
+      expect(res.status).toBe(statusCodes.OK);
+      expect(res.body.message).toBe('Post successfully unliked');
+    });
+
+    test('should return a conflict', async () => {
+      const res = await request(app)
+        .delete(`${urlPrefix}/posts/${postSlug}/like`)
+        .set('Authorization', token)
+      expect(res.status).toBe(statusCodes.CONFLICT);
+      expect(res.body.message).toBe(responseMessages.notLiked('post'));
     });
   });
 

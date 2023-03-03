@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const TokenSchema = new Schema({
-  _userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
@@ -18,6 +18,9 @@ const TokenSchema = new Schema({
   createdAt: {
     type: Date,
     default: new Date(),
+  },
+  notificationToken: {
+    type: String,
   },
   updatedAt: {
     type: Date,

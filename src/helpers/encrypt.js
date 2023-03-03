@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import Token from '../models/Token';
 
-const { SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 /**
  * A helper class to hash password and compare hashed password
@@ -33,10 +33,10 @@ class Authentication {
    * @returns  {string}} {expiresIn
    */
   static async generateToken(_id) {
-    const token = jwt.sign({ _id }, SECRET, { expiresIn: '2d' });
+    const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '2d' });
     await Token.create({
-      _userId: _id,
-      token
+      user: _id,
+      token,
     });
     return token;
   }

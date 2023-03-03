@@ -15,6 +15,7 @@ const signup = Joi.object().keys({
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)
     .required(),
+  notificationToken: Joi.string(),
 });
 
 const login = Joi.object().keys({
@@ -25,6 +26,7 @@ const login = Joi.object().keys({
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)
     .required(),
+  notificationToken: Joi.string(),
 });
 
 const email = Joi.object().keys({

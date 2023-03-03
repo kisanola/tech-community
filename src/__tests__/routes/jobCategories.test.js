@@ -13,7 +13,7 @@ describe('jobCategories', () => {
   beforeAll(async () => {
     await JobCategory.deleteMany({});
     user = await User.findOne({ username: 'admin' });
-    tokenData = await Token.findOne({ _userId: user._id }).sort({
+    tokenData = await Token.findOne({ user: user._id }).sort({
       createdAt: -1,
     });
     token = `Bearer ${tokenData.token}`;

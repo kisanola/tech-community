@@ -10,11 +10,12 @@ const res = {
   status() {
     return this;
   },
-  json() { },
+  json() {},
 };
 
 describe('Social login', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
+    await User.deleteOne({ email: user.emails[0].value });
     jest.spyOn(res, 'status');
   });
 
@@ -41,7 +42,7 @@ describe('Social login', () => {
     );
     expect(res.status).toHaveBeenCalledWith(statusCodes.OK);
   });
-  
+
   afterAll(async () => {
     await User.deleteOne({ email: user.emails[0].value });
     await Person.deleteMany({});

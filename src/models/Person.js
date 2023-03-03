@@ -7,12 +7,15 @@ const personSchema = new Schema({
   },
   firstName: {
     type: String,
+    default: '',
   },
   lastName: {
     type: String,
+    default: '',
   },
   middleName: {
     type: String,
+    default: '',
   },
   gender: {
     type: String,
@@ -26,12 +29,15 @@ const personSchema = new Schema({
   },
   bio: {
     type: String,
+    default: '',
   },
   languages: {
     type: [String],
+    default: [],
   },
   skills: {
     type: [String],
+    default: [],
   },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   educations: [{ type: Schema.Types.ObjectId, ref: 'PersonEducation' }],

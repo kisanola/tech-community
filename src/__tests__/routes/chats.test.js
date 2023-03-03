@@ -12,75 +12,65 @@ let token;
 let tokenData;
 const username = 'admin';
 describe('Chats', () => {
+  beforeAll(async () => {
+    user = await User.findOne({ username });
+    tokenData = await Token.findOne({ user: user._id }).sort({
+      createdAt: -1,
+    });
+    token = `Bearer ${tokenData.token}`;
+  });
 
-    beforeAll(async () => {
-        user = await User.findOne({ username });
-        tokenData = await Token.findOne({ _userId: user._id }).sort({
-            createdAt: -1,
-        });
-        token = `Bearer ${tokenData.token}`;
+  describe('Send a message to a user ', () => {
+    test('Should send a new message', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/chats/${username}`)
+        .set('Authorization', token)
+        .send({ body: message });
+      expect(res.status).toBe(statusCodes.OK);
+      expect(res.body.chat.body).toBe(message);
     });
 
-    describe('Send a message to a user ', () => {
-
-        test('Should send a new message', async () => {
-
-            const res = await request(app)
-                .post(`${urlPrefix}/chats/${username}`)
-                .set('Authorization', token)
-                .send({ body: message });
-            expect(res.status).toBe(statusCodes.OK);
-            expect(res.body.chat.body).toBe(message);
-
-        });
-
-        test('Should fail to send if the receiver does not exist', async () => {
-
-            const res = await request(app)
-                .post(`${urlPrefix}/chats/not-exist`)
-                .set('Authorization', token)
-                .send({ body: message });
-            expect(res.status).toBe(statusCodes.NOT_FOUND);
-            expect(res.body.message).toBe(notExist('The user'));
-        });
-
-        test('should return `Unauthorized access`', async () => {
-            const res = await request(app)
-                .post(`${urlPrefix}/chats/not-exist`)
-                .send({ body: message });
-            expect(res.status).toBe(statusCodes.UNAUTHORIZED);
-            expect(res.body.message).toBe(unauthorized());
-        });
-
+    test('Should fail to send if the receiver does not exist', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/chats/not-exist`)
+        .set('Authorization', token)
+        .send({ body: message });
+      expect(res.status).toBe(statusCodes.NOT_FOUND);
+      expect(res.body.message).toBe(notExist('The user'));
     });
 
-    describe('Get user chats ', () => {
-
-        test('Should a user chats', async () => {
-
-            const res = await request(app)
-                .get(`${urlPrefix}/chats/${username}`)
-                .set('Authorization', token)
-            expect(res.status).toBe(statusCodes.OK);
-        });
-
-        test('Should fail to get the user chats if the user does not exist', async () => {
-
-            const res = await request(app)
-                .get(`${urlPrefix}/chats/not-exist`)
-                .set('Authorization', token)
-                .send({ body: message });
-            expect(res.status).toBe(statusCodes.NOT_FOUND);
-            expect(res.body.message).toBe(notExist('The user'));
-        });
-
-        test('should return `Unauthorized access`', async () => {
-            const res = await request(app)
-                .post(`${urlPrefix}/chats/not-exist`)
-                .send({ body: message });
-            expect(res.status).toBe(statusCodes.UNAUTHORIZED);
-            expect(res.body.message).toBe(unauthorized());
-        });
-
+    test('should return `Unauthorized access`', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/chats/not-exist`)
+        .send({ body: message });
+      expect(res.status).toBe(statusCodes.UNAUTHORIZED);
+      expect(res.body.message).toBe(unauthorized());
     });
+  });
+
+  describe('Get user chats ', () => {
+    test('Should a user chats', async () => {
+      const res = await request(app)
+        .get(`${urlPrefix}/chats/${username}`)
+        .set('Authorization', token);
+      expect(res.status).toBe(statusCodes.OK);
+    });
+
+    test('Should fail to get the user chats if the user does not exist', async () => {
+      const res = await request(app)
+        .get(`${urlPrefix}/chats/not-exist`)
+        .set('Authorization', token)
+        .send({ body: message });
+      expect(res.status).toBe(statusCodes.NOT_FOUND);
+      expect(res.body.message).toBe(notExist('The user'));
+    });
+
+    test('should return `Unauthorized access`', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/chats/not-exist`)
+        .send({ body: message });
+      expect(res.status).toBe(statusCodes.UNAUTHORIZED);
+      expect(res.body.message).toBe(unauthorized());
+    });
+  });
 });

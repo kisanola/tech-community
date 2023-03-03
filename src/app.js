@@ -7,17 +7,27 @@ import 'dotenv/config';
 import swaggerUI from 'swagger-ui-express';
 import YAML from 'yamljs';
 import passport from 'passport';
+import webPush from 'web-push';
 import joiErrors from './middlewares/joiErrors';
 import logger from './helpers/logger';
 import { connectDb } from './models';
 import routes from './routes';
+import registerEvents from './middlewares/registerEvents';
 
 const isProd = process.env.NODE_ENV === 'production';
 const app = express();
 const swaggerYAMLDocs = YAML.load('./docs/swagger.yml');
+const { PUSH_PUBLIC_VAPID_KEY, PUSH_PRIVATE_VAPID_KEY } = process.env;
+
+webPush.setVapidDetails(
+  'mailto:example@yourdomain.org',
+  PUSH_PUBLIC_VAPID_KEY,
+  PUSH_PRIVATE_VAPID_KEY,
+);
 
 connectDb().then(async () => {
   logger.info('Mongodb connected');
+  registerEvents();
 });
 
 app.use(cors());

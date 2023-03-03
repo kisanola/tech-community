@@ -287,6 +287,218 @@ paths:
         '404':
           description: User not found
 
+  /posts/{postSlug}/like:
+    post:
+      summary: 'Like a post'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Posts'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the success message
+        '401':
+          description: Unauthorized
+        '404':
+          description: Post not found
+        '409':
+          description: Conflict
+    delete:
+      summary: 'Unlike a post'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Posts'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the success message
+        '401':
+          description: Unauthorized
+        '404':
+          description: Post not found
+        '409':
+          description: Conflict
+
+  /jobs/{jobSlug}/like:
+    post:
+      summary: 'Like a job'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the success message
+        '401':
+          description: Unauthorized
+        '404':
+          description: Job not found
+        '409':
+          description: Conflict
+    delete:
+      summary: 'Unlike a job'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Jobs'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the success message
+        '401':
+          description: Unauthorized
+        '404':
+          description: Job not found
+        '409':
+          description: Conflict
+
+  /recommendations/{username}:
+    get:
+      summary: 'Get a user recommendation'
+      tags:
+        - 'Recommendation'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the user recommendations
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+    post:
+      summary: 'Recommend a user'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Recommendation'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+        - in: "body"
+          name: "description"
+          description: "Contains recommendation description"
+          required: true
+          schema:
+            type: "object"
+            properties:
+                description:
+                  type: "string"
+      responses:
+        '200':
+          description: returns the created recommendation
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+
+  /recommendations/{recommendationId}/approve:
+    post:
+      summary: 'approve a user recommendation'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Recommendation'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the approved recommendation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Recommendation not found
+    delete:
+      summary: 'disaprove a user recommendation'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Recommendation'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Return the disaproved recommendation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Recommendation not found
+    put:
+      summary: 'Update a recommendation'
+      security:
+        - bearerAuth: []
+      tags:
+        - 'Recommendation'
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+        - in: "body"
+          name: "description"
+          description: "Contains recommendation description"
+          required: true
+          schema:
+            type: "object"
+            properties:
+                description:
+                  type: "string"
+      responses:
+        '200':
+          description: returns the updated recommendation
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+
+  /organizations:
+    get:
+      summary: 'Get all organizations'
+      tags:
+        - 'Organizations'
+      responses:
+        '200':
+          description: Return the list of all organizations
+
+  /organizations/{organizationId}:
+    get:
+      summary: 'Get a single organization'
+      tags:
+        - 'Organizations'
+      responses:
+        '200':
+          description: Return the organization
+        '404':
+          description: Organization does not exist
+
 
   /user:
     get:
@@ -1222,29 +1434,17 @@ paths:
               message:
                 type: string
                 example: Notifications enabled
-  /users/stats:
+  /feeds:
     get:
+      summary: 'get home feeds'
+      security:
+        - bearerAuth: []
       tags:
-        - 'Users'
-      summary: reading statistics
-      operationId: readStats
-      parameters:
-        - name: Authorization
-          in: header
-          description: JWT Token
-          required: true
-          type: string
+        - 'Feeds'
       responses:
         '200':
-          description: returns reading statistics
-          schema:
-            type: object
-            properties:
-              status:
-                type: number
-                example: 200
-              readingStats:
-                type: number
+          description: Return the home feeds
+
 definitions:
   user:
     type: object

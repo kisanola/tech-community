@@ -19,7 +19,7 @@ const seedUsers = async () => {
       const user = await User.findOne({ email: val.email });
       const token = jwt.sign({ _id: user._id }, JWT_SECRET);
       logger.info(`username: ${user.username}, Token ${index + 1}: ${token}`);
-      await Token.create({ _userId: user._id, token });
+      await Token.create({ user: user._id, token });
       if (users.length >= index + 1) {
         resolve(true);
       }

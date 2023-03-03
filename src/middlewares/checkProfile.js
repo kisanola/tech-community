@@ -9,7 +9,7 @@ const checkProfile = async (req, res, next) => {
     username,
     status: { $ne: 'deleted' },
   })
-    .select('username email picture city country info')
+    .select(['-status', '-createdAt', '-updatedAt', '-password'])
     .populate('info', '-__v');
 
   if (!foundProfile) {

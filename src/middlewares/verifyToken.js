@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-const { SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const verifyToken = (req, res, next) => {
   try {
     const { token } = req.params;
-    const jwtPayload = jwt.verify(token, SECRET);
+    const jwtPayload = jwt.verify(token, JWT_SECRET);
 
     req.jwtPayload = jwtPayload;
 

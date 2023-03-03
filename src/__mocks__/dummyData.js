@@ -42,6 +42,12 @@ module.exports = {
     email: 'company@name.com',
     password: 'CompanyName123',
   },
+  organizationShare: {
+    companyName: 'company name',
+    username: 'company-name_share',
+    email: 'company-share@name.com',
+    password: 'CompanyName123',
+  },
   organizationUser: {
     companyName: 'company name',
     username: 'company_name_user',
@@ -65,5 +71,15 @@ module.exports = {
     from: '2019',
     title: 'Platform',
     owner: 'Myself',
+  },
+  recommendationDescritption: {
+    description: 'This is my recommendation description',
+  },
+  postCommentData: {
+    body: 'Post comment',
+  },
+  notificationData: {
+    link: 'https://localhost:3000/posts/postId',
+    content: 'notificatioToken',
   },
 };
