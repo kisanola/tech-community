@@ -4,13 +4,13 @@ import mongoosePaginate from 'mongoose-paginate';
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
-    unique: true,
+    // required: true,
+    // unique: true,
   },
   email: {
     type: String,
     required: false,
-    unique: true,
+    // unique: true,
     lowercase: true,
   },
   password: {
@@ -68,6 +68,14 @@ const UserSchema = new Schema({
   info: {
     type: Schema.Types.ObjectId,
     ref: 'Person',
+  },
+  nonce: {
+    type: Number,
+    default: Math.floor(Math.random() * 1000000)
+  },
+  publicAddress: {
+    type: String,
+    unique: true
   },
   createdAt: {
     type: Date,

@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import { bufferToHex } from 'ethereumjs-util'
+import { recoverPersonalSignature } from 'eth-sig-util'
 import User from '../models/User';
 import Person from '../models/Person';
 import { encrypt, sendMail } from '../helpers';
@@ -9,6 +11,7 @@ import {
   BAD_REQUEST,
   FORBIDDEN,
   UNAUTHORIZED,
+  NOT_FOUND,
 } from '../constants/statusCodes';
 import Token from '../models/Token';
 import { notifEvents } from '../middlewares/registerEvents';
@@ -34,14 +37,8 @@ class AuthController {
    * @memberof User
    */
   static async findOrCreate(res, providerUser) {
-    const {
-      id,
-      email,
-      picture,
-      displayName,
-      name,
-      fallbackUrl,
-    } = AuthController.fromProvider(providerUser);
+    const { id, email, picture, displayName, name, fallbackUrl } =
+      AuthController.fromProvider(providerUser);
 
     const getUser = (userId) => Person.findById(userId).populate('user').exec();
 
@@ -240,6 +237,79 @@ class AuthController {
       message: 'Your account has been verified successfully',
     });
   }
+}
+
+/**
+ * Signup with their Crypto wallet
+ * 
+ * @author Eric Malaba
+ * @param {Object} req 
+ * @param {Object} res 
+ * @returns {Object} User
+ */
+export const walletSignup = async (req, res) => {
+  const { publicAddress } = req.body
+
+  const response = (status, user) => res.status(status).json({
+    nonce: user.nonce,
+    publicAddress: user.publicAddress,
+    updatedAt: user.updatedAt
+  });
+  const nonce = Math.floor(Math.random() * 1000000)
+  const user = await User
+    .findOneAndUpdate({ publicAddress }, { nonce }, { new: true })
+  if (user) {
+    return response(OK, user)
+  }
+  const newUser = await User.create({
+    publicAddress
+  })
+  return response(CREATED, newUser)
+}
+
+/**
+ * Authenticate user with their Crypto wallet
+ * 
+ * @author Eric Malaba
+ * @param {*} req 
+ * @param {*} res 
+ * @returns {Object} Auth
+ */
+export const walletLogin = async (req, res) => {
+  const { publicAddress, signature } = req.body
+
+  const user = await User.findOne({ publicAddress })
+  if (!user) {
+    return res.status(NOT_FOUND).json({
+      status: NOT_FOUND,
+      message: `User with public address ${publicAddress} not found!`
+    })
+  }
+  const msg = `Signing one-time nonce ${user.nonce} ${user.updatedAt} ${user.publicAddress}`
+  const msgBufferHex = bufferToHex(Buffer.from(msg, 'utf-8'))
+  const address = recoverPersonalSignature({
+    data: msgBufferHex,
+    sig: signature
+  })
+
+  if (address.toLowerCase() !== publicAddress.toLowerCase()) {
+    return res.status(UNAUTHORIZED).json({
+      status: UNAUTHORIZED,
+      error: 'Signature verification failed!'
+    })
+  }
+
+  const token = await encrypt.generateToken(user._id)
+
+  const getUser = (userId) =>
+      Person.findOne({ user: userId }).populate('user').exec();
+
+  const usr = await getUser(user.id);
+
+  return res.status(OK).json({
+    user: usr,
+    token,
+  });
 }
 
 export default AuthController;
